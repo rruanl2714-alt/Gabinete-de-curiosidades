@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gabinete de Curiosidades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #16211C;
+    --ink-2: #1c2b23;
+    --paper: #EDE6D6;
+    --paper-2: #E3DAC5;
+    --text: #201d16;
+    --text-dim: #5a5748;
+    --brass: #B08D57;
+    --brass-light: #d4b483;
+    --c-historia: #8B5E3C;
+    --c-espaco: #46528f;
+    --c-animais: #4f6b46;
+    --c-paises: #9a4028;
+    --c-misterios: #6b4c7a;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Source Serif 4', serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  /* texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(176,141,87,0.06), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(176,141,87,0.05), transparent 45%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:relative;
+    padding:88px 0 64px;
+    border-bottom:1px solid rgba(176,141,87,0.35);
+    overflow:hidden;
+  }
+  .emblem{
+    width:56px; height:56px;
+    margin:0 auto 28px;
+    border:1.5px solid var(--brass);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--brass-light);
+    position:relative;
+  }
+  .emblem::before, .emblem::after{
+    content:"";
+    position:absolute;
+    border:1px solid rgba(176,141,87,0.4);
+    border-radius:50%;
+  }
+  .emblem::before{ inset:-8px; }
+  .emblem::after{ inset:-16px; border-style:dashed; }
+
+  .eyebrow{
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--brass-light);
+    margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(40px, 7vw, 76px);
+    line-height:1.02;
+    text-align:center;
+    margin:0 0 20px;
+    letter-spacing:-0.01em;
+    color:var(--paper);
+  }
+  h1 em{
+    font-style:italic;
+    font-weight:400;
+    color:var(--brass-light);
+  }
+  .subtitle{
+    text-align:center;
+    max-width:520px;
+    margin:0 auto 40px;
+    color:rgba(237,230,214,0.72);
+    font-size:17px;
+    line-height:1.6;
+  }
+
+  .header-actions{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .btn-random{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    background:var(--brass);
+    color:var(--ink);
+    border:none;
+    padding:15px 28px;
+    border-radius:2px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-weight:600;
+    transition:transform 0.18s ease, background 0.18s ease;
+  }
+  .btn-random:hover{ background:var(--brass-light); transform:translateY(-1px); }
+  .btn-random:active{ transform:translateY(0px) scale(0.98); }
+  .btn-random:focus-visible{ outline:2px solid var(--paper); outline-offset:3px; }
+  .dice{ font-size:15px; }
+
+  .counter{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:rgba(237,230,214,0.5);
+    display:flex;
+    align-items:center;
+    letter-spacing:0.04em;
+  }
+
+  /* ---------- FILTER DRAWERS ---------- */
+  .drawers{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(22,33,28,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(176,141,87,0.25);
+    padding:16px 0;
+  }
+  .drawer-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .drawer-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    background:transparent;
+    border:1px solid rgba(176,141,87,0.4);
+    color:rgba(237,230,214,0.75);
+    padding:9px 16px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:all 0.15s ease;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .drawer-btn .dot{
+    width:7px; height:7px; border-radius:50%;
+    background:currentColor;
+    opacity:0.8;
+  }
+  .drawer-btn:hover{ border-color:var(--brass-light); color:var(--paper); }
+  .drawer-btn.active{
+    background:var(--brass);
+    border-color:var(--brass);
+    color:var(--ink);
+    font-weight:600;
+  }
+  .drawer-btn:focus-visible{ outline:2px solid var(--brass-light); outline-offset:2px; }
+
+  /* ---------- GRID ---------- */
+  main{ padding:56px 0 100px; position:relative; z-index:1; }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:22px;
+  }
+
+  .card{
+    perspective:1600px;
+    height:260px;
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise 0.6s ease forwards;
+  }
+  @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+
+  .card-inner{
+    position:relative;
+    width:100%; height:100%;
+    transform-style:preserve-3d;
+    transition:transform 0.65s cubic-bezier(.4,.2,.2,1);
+    cursor:pointer;
+  }
+  .card.flipped .card-inner{ transform:rotateY(180deg); }
+
+  .card-face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--text);
+    padding:22px 22px 18px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 10px 24px rgba(0,0,0,0.28), 0 1px 0 rgba(255,255,255,0.4) inset;
+    border:1px solid rgba(0,0,0,0.06);
+  }
+  .card-face.back{ transform:rotateY(180deg); background:var(--paper-2); }
+
+  .card-inner:hover{ transform:translateY(-3px); }
+  .card.flipped .card-inner:hover{ transform:rotateY(180deg) translateY(-3px); }
+
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:14px;
+  }
+  .spec-no{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--text-dim);
+    letter-spacing:0.05em;
+  }
+  .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:4px 9px;
+    border-radius:12px;
+    color:#fff;
+    white-space:nowrap;
+  }
+  .card-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:19px;
+    line-height:1.25;
+    margin:0 0 10px;
+  }
+  .card-teaser{
+    font-size:14px;
+    line-height:1.55;
+    color:var(--text-dim);
+    flex:1;
+    overflow:hidden;
+  }
+  .card-hint{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .card-face.back .card-teaser{ font-size:14.5px; color:var(--text); }
+
+  .card.spotlight .card-inner{
+    box-shadow:0 0 0 3px var(--brass-light);
+    border-radius:3px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid rgba(176,141,87,0.25);
+    padding:40px 0 56px;
+    text-align:center;
+  }
+  footer p{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:rgba(237,230,214,0.45);
+    letter-spacing:0.04em;
+    margin:0;
+  }
+
+  .empty{
+    text-align:center;
+    padding:60px 20px;
+    color:rgba(237,230,214,0.5);
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    display:none;
+  }
+
+  @media (max-width:520px){
+    header{ padding:64px 0 44px; }
+    .card{ height:290px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="emblem">GC</div>
+    <div class="eyebrow">Um catálogo de fatos extraordinários</div>
+    <h1>Gabinete de <em>Curiosidades</em></h1>
+    <p class="subtitle">História, espaço, animais, países e mistérios — organizados como espécimes de coleção. Toque em um cartão para virá-lo.</p>
+    <div class="header-actions">
+      <button class="btn-random" id="randomBtn"><span class="dice">🎲</span> Sortear uma curiosidade</button>
+      <span class="counter" id="counter"></span>
+    </div>
+  </div>
+</header>
+
+<nav class="drawers">
+  <div class="wrap">
+    <div class="drawer-row" id="drawerRow"></div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="emptyState">Nenhum espécime encontrado nesta gaveta.</div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>GABINETE DE CURIOSIDADES · CATÁLOGO EM CONSTANTE EXPANSÃO</p>
+  </div>
+</footer>
+
+<script>
+const CATEGORIES = {
+  historia:  { label: "História",   color: "var(--c-historia)"  },
+  espaco:    { label: "Espaço",     color: "var(--c-espaco)"    },
+  animais:   { label: "Animais",    color: "var(--c-animais)"   },
+  paises:    { label: "Países",     color: "var(--c-paises)"    },
+  misterios: { label: "Mistérios",  color: "var(--c-misterios)" },
+};
+
+const DATA = [
+  {cat:"historia", title:"A muralha que ninguém vê do espaço", teaser:"Apesar do mito popular, a Grande Muralha da China não é visível a olho nu de fora da atmosfera terrestre.", text:"Astronautas confirmam que a Grande Muralha da China é fina demais e se mistura à paisagem, tornando-a praticamente invisível a olho nu do espaço — ao contrário do que diz o mito repetido há gerações."},
+  {cat:"historia", title:"O mito da altura de Napoleão", teaser:"Napoleão Bonaparte não era baixo para os padrões da sua própria época.", text:"Napoleão media cerca de 1,68m, altura mediana entre os franceses do século XIX. A lenda do 'baixinho' nasceu de uma confusão entre as unidades de medida francesa e inglesa usadas nos registros da época."},
+  {cat:"historia", title:"Cleópatra e as pirâmides", teaser:"A rainha egípcia viveu mais perto de nós do que da construção das pirâmides.", text:"Cleópatra nasceu quando as pirâmides de Gizé já tinham quase 2.500 anos de existência — ou seja, ela está cronologicamente mais próxima da invenção do smartphone do que da construção dos monumentos que a tornaram famosa."},
+  {cat:"historia", title:"Uma universidade mais velha que um império", teaser:"Oxford já dava aulas antes de Tenochtitlán sequer existir.", text:"Já havia atividade de ensino em Oxford por volta de 1096, enquanto a capital asteca, Tenochtitlán, só foi fundada em 1325 — tornando a universidade inglesa mais antiga que todo o Império Asteca."},
+  {cat:"historia", title:"Gatos, bruxaria e a peste", teaser:"A perseguição medieval aos gatos pode ter acelerado uma das maiores tragédias da história.", text:"Durante a Idade Média, gatos foram associados à bruxaria e sofreram perseguições em massa na Europa. Segundo alguns historiadores, isso reduziu a população de predadores de ratos, ajudando a peste bubônica a se espalhar mais rápido."},
+  {cat:"historia", title:"O relógio que nunca parou", teaser:"Em uma catedral inglesa, um mecanismo soa os sinos desde o século XIV.", text:"O relógio mais antigo em funcionamento contínuo do mundo fica na Catedral de Salisbury, na Inglaterra, e opera desde cerca de 1386 — originalmente sem mostrador, apenas soando os sinos nas horas certas."},
+  {cat:"historia", title:"Cem anos que foram cento e dezesseis", teaser:"O nome do conflito não bate com sua duração real.", text:"A Guerra dos Cem Anos entre França e Inglaterra durou, na verdade, 116 anos, entre 1337 e 1453, intercalados por longos períodos de trégua e reorganização militar dos dois lados."},
+
+  {cat:"espaco", title:"Um ano mais curto que um dia", teaser:"Em Vênus, o calendário e o relógio se invertem.", text:"Um dia em Vênus é mais longo que um ano no planeta: Vênus leva 243 dias terrestres para girar em torno do próprio eixo, mas apenas 225 dias para completar uma volta ao redor do Sol."},
+  {cat:"espaco", title:"Um planeta de diamante", teaser:"A 1.400 anos-luz daqui, existe um mundo com superfície de carbono comprimido.", text:"O exoplaneta 55 Cancri e, a cerca de 1.400 anos-luz da Terra, é estudado por cientistas que acreditam que boa parte de sua superfície seja composta de carbono comprimido em forma de diamante."},
+  {cat:"espaco", title:"O cheiro do espaço", teaser:"Astronautas descrevem um odor bem específico ao voltar de caminhadas espaciais.", text:"Segundo relatos de astronautas, ao remover os trajes após caminhadas espaciais, o cheiro que fica impregnado no tecido lembra metal queimado, pólvora e carne grelhada."},
+  {cat:"espaco", title:"Metais que se fundem sozinhos", teaser:"No vácuo, dois pedaços do mesmo metal podem grudar para sempre.", text:"Se dois pedaços de metal idêntico se tocarem no vácuo do espaço, podem se fundir permanentemente em um processo chamado soldagem a frio — algo quase impossível na Terra, onde o ar e o óxido impedem o contato direto entre as superfícies."},
+  {cat:"espaco", title:"Dezesseis amanheceres por dia", teaser:"A velocidade orbital da ISS multiplica o número de nascentes do sol.", text:"A Estação Espacial Internacional viaja tão rápido que seus ocupantes veem o nascer do sol a cada 90 minutos, totalizando cerca de 16 amanheceres a cada 24 horas terrestres."},
+  {cat:"espaco", title:"A estrela quase tão velha quanto o universo", teaser:"HD 140283 intriga astrônomos por sua idade extrema.", text:"A estrela HD 140283, apelidada de 'Estrela Matusalém', tem uma idade estimada muito próxima da idade do próprio universo, o que representa um desafio para os modelos atuais de formação estelar."},
+  {cat:"espaco", title:"O planeta que flutuaria na água", teaser:"Saturno desafia a lógica de peso e tamanho.", text:"Saturno é o único planeta do sistema solar menos denso que a água. Em teoria, se existisse uma banheira grande o suficiente, o planeta inteiro flutuaria nela."},
+
+  {cat:"animais", title:"Três corações e sangue azul", teaser:"A anatomia do polvo parece coisa de ficção científica.", text:"Os polvos têm três corações e sangue azul: dois corações bombeiam sangue para as brânquias, enquanto um terceiro faz o sangue circular pelo restante do corpo."},
+  {cat:"animais", title:"Cochilos em vez de noites de sono", teaser:"As formigas descansam de um jeito bem diferente do nosso.", text:"As formigas não dormem no sentido tradicional. A maioria descansa em centenas de cochilos curtos ao longo do dia, somando poucas horas de repouso total acumulado."},
+  {cat:"animais", title:"O elefante que se reconhece no espelho", teaser:"Poucos animais passam no chamado teste do espelho.", text:"Os elefantes conseguem reconhecer o próprio reflexo em um espelho, uma habilidade rara associada à autoconsciência, compartilhada apenas por poucos outros animais, como golfinhos e grandes primatas."},
+  {cat:"animais", title:"Um golpe que aquece a água", teaser:"O ataque do camarão-mantis é rápido o suficiente para gerar luz.", text:"Camarões-mantis golpeiam suas presas com tanta velocidade que a água ao redor da pancada aquece brevemente a milhares de graus, criando um breve clarão de luz chamado sonoluminescência."},
+  {cat:"animais", title:"Um ano sem comer nem beber", teaser:"As tartarugas-das-Galápagos têm uma resistência impressionante.", text:"As tartarugas-das-Galápagos podem passar mais de um ano sem comer ou beber água, sobrevivendo à custa da gordura armazenada no próprio corpo durante esse período."},
+  {cat:"animais", title:"O paladar que fica nos pés", teaser:"Borboletas provam a comida antes mesmo de usar a boca.", text:"As borboletas sentem o sabor dos alimentos com os pés, por meio de receptores químicos localizados nas patas, o que ajuda a identificar plantas adequadas para pousar e se alimentar."},
+  {cat:"animais", title:"Corvos que não esquecem um rosto", teaser:"Essas aves guardam rancor — literalmente.", text:"Corvos são capazes de reconhecer rostos humanos individuais e guardam rancor de pessoas que os trataram mal, alertando outros corvos sobre essas pessoas por meio de vocalizações específicas."},
+
+  {cat:"paises", title:"Onze fusos horários, um país só", teaser:"A extensão da Rússia distorce até o relógio.", text:"A Rússia é tão extensa que abrange 11 fusos horários diferentes, quase um terço de todos os fusos horários existentes no planeta."},
+  {cat:"paises", title:"O menor país do mundo", teaser:"Menor que muitos parques urbanos, mas com peso histórico enorme.", text:"O Vaticano é o menor país do mundo em área, com pouco menos de meio quilômetro quadrado — menor do que diversos parques encontrados em grandes cidades."},
+  {cat:"paises", title:"Canela na porta dos solteiros", teaser:"Uma tradição dinamarquesa literalmente tempera o aniversário.", text:"Na Dinamarca, existe uma tradição de jogar canela em pó na porta de amigos solteiros que completam 25 ou 30 anos, deixando-os cobertos de tempero da cabeça aos pés."},
+  {cat:"paises", title:"Um país que mede felicidade, não PIB", teaser:"O Butão trocou o indicador econômico tradicional por outro critério.", text:"O Butão é o único país do mundo que mede seu progresso nacional pela chamada Felicidade Interna Bruta, em vez de depender apenas do Produto Interno Bruto tradicional."},
+  {cat:"paises", title:"O último grande território povoado", teaser:"A Nova Zelândia recebeu seus primeiros habitantes muito depois da maioria dos lugares.", text:"A Nova Zelândia foi um dos últimos grandes territórios habitáveis a ser povoado por seres humanos: a chegada dos primeiros polinésios só ocorreu por volta do século XIII."},
+  {cat:"paises", title:"Um país sem exército permanente", teaser:"A Islândia abriu mão das forças armadas há mais de 150 anos.", text:"A Islândia não possui exército permanente desde 1869 e depende de acordos de cooperação internacional para garantir sua defesa em caso de necessidade."},
+  {cat:"paises", title:"O deserto que quase nunca chove", teaser:"No Chile, existe um dos lugares mais secos do planeta.", text:"O deserto do Atacama, no Chile, é um dos lugares mais secos do mundo — há regiões dentro dele que nunca registraram chuva desde que existem medições meteorológicas confiáveis."},
+
+  {cat:"misterios", title:"O livro que ninguém consegue ler", teaser:"O Manuscrito Voynich resiste a décadas de tentativas de decifração.", text:"O Manuscrito Voynich, um livro do século XV escrito em um alfabeto desconhecido e repleto de ilustrações estranhas, nunca foi decifrado por completo, apesar de décadas de esforço de linguistas e criptógrafos."},
+  {cat:"misterios", title:"Figuras gigantes só visíveis do alto", teaser:"Os desenhos de Nazca escondem um mistério sobre sua própria criação.", text:"Os círculos e figuras de Nazca, no Peru, formam desenhos gigantescos no solo do deserto que só podem ser plenamente reconhecidos do alto. Como e por que foram criados há mais de mil anos ainda intriga arqueólogos."},
+  {cat:"misterios", title:"O navio encontrado sem tripulação", teaser:"O caso do Mary Celeste segue sem uma explicação definitiva.", text:"O navio Mary Celeste foi encontrado à deriva no Atlântico em 1872, completamente abandonado, sem sinais de luta e com mantimentos intactos — um mistério marítimo que permanece sem solução aceita por todos."},
+  {cat:"misterios", title:"Pedras erguidas há cinco mil anos", teaser:"O propósito do círculo de Callanish, na Escócia, ainda divide especialistas.", text:"O conjunto de menires de Callanish, na Escócia, foi erguido há mais de 5 mil anos, antes até de Stonehenge. Sua finalidade exata — calendário astronômico, local cerimonial ou algo diferente — continua sendo debatida por arqueólogos."},
+  {cat:"misterios", title:"Quando muita gente lembra errado", teaser:"O Efeito Mandela mostra como a memória coletiva pode falhar.", text:"O chamado Efeito Mandela descreve o fenômeno em que grandes grupos de pessoas compartilham a mesma lembrança falsa sobre um evento, nome ou frase, gerando debates sobre como funciona a memória coletiva."},
+  {cat:"misterios", title:"Luzes que rondam a Floresta Negra", teaser:"Avistamentos antigos ganharam, séculos depois, uma explicação parcial.", text:"Na Floresta Negra, na Alemanha, moradores relatam há séculos avistamentos de luzes inexplicáveis conhecidas como 'fogos-fátuos', hoje parcialmente atribuídas à combustão espontânea de gases liberados por matéria orgânica em decomposição."},
+  {cat:"misterios", title:"Um triângulo mais famoso que perigoso", teaser:"As estatísticas não confirmam a fama sombria da região.", text:"O Triângulo das Bermudas segue popularmente associado a desaparecimentos de embarcações e aeronaves, embora estudos estatísticos mostrem que a taxa de incidentes na região não é maior do que em outras rotas marítimas igualmente movimentadas."},
+];
+
+DATA.forEach((d, i) => { d.id = i; d.no = String(i + 1).padStart(3, "0"); });
+
+let activeFilter = "todas";
+let flippedId = null;
+
+const grid = document.getElementById("grid");
+const drawerRow = document.getElementById("drawerRow");
+const counter = document.getElementById("counter");
+const emptyState = document.getElementById("emptyState");
+
+function buildDrawers(){
+  const all = document.createElement("button");
+  all.className = "drawer-btn active";
+  all.textContent = "Todas as gavetas";
+  all.dataset.cat = "todas";
+  drawerRow.appendChild(all);
+
+  Object.entries(CATEGORIES).forEach(([key, val]) => {
+    const btn = document.createElement("button");
+    btn.className = "drawer-btn";
+    btn.dataset.cat = key;
+    btn.innerHTML = `<span class="dot" style="color:${val.color}"></span>${val.label}`;
+    drawerRow.appendChild(btn);
+  });
+
+  drawerRow.addEventListener("click", (e) => {
+    const btn = e.target.closest(".drawer-btn");
+    if(!btn) return;
+    activeFilter = btn.dataset.cat;
+    [...drawerRow.children].forEach(b => b.classList.toggle("active", b === btn));
+    renderGrid();
+  });
+}
+
+function cardHTML(item){
+  const cat = CATEGORIES[item.cat];
+  return `
+    <div class="card" data-id="${item.id}" data-cat="${item.cat}">
+      <div class="card-inner">
+        <div class="card-face front">
+          <div class="card-top">
+            <span class="spec-no">Nº ${item.no}</span>
+            <span class="tag" style="background:${cat.color}">${cat.label}</span>
+          </div>
+          <h3 class="card-title">${item.title}</h3>
+          <p class="card-teaser">${item.teaser}</p>
+          <span class="card-hint">virar cartão →</span>
+        </div>
+        <div class="card-face back">
+          <div class="card-top">
+            <span class="spec-no">Nº ${item.no}</span>
+            <span class="tag" style="background:${cat.color}">${cat.label}</span>
+          </div>
+          <p class="card-teaser">${item.text}</p>
+          <span class="card-hint">← voltar</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderGrid(){
+  const items = activeFilter === "todas" ? DATA : DATA.filter(d => d.cat === activeFilter);
+  grid.innerHTML = items.map(cardHTML).join("");
+  emptyState.style.display = items.length ? "none" : "block";
+  counter.textContent = `${items.length} espécime${items.length === 1 ? "" : "s"} catalogado${items.length === 1 ? "" : "s"}`;
+
+  [...grid.querySelectorAll(".card")].forEach((card, i) => {
+    card.style.animationDelay = `${i * 0.035}s`;
+    card.addEventListener("click", () => {
+      card.classList.toggle("flipped");
+    });
+  });
+}
+
+function sortear(){
+  const items = activeFilter === "todas" ? DATA : DATA.filter(d => d.cat === activeFilter);
+  if(!items.length) return;
+  const pick = items[Math.floor(Math.random() * items.length)];
+  const cardEl = grid.querySelector(`.card[data-id="${pick.id}"]`);
+  if(!cardEl) return;
+
+  grid.querySelectorAll(".card").forEach(c => c.classList.remove("spotlight", "flipped"));
+  cardEl.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  setTimeout(() => {
+    cardEl.classList.add("flipped", "spotlight");
+    setTimeout(() => cardEl.classList.remove("spotlight"), 1800);
+  }, 350);
+}
+
+document.getElementById("randomBtn").addEventListener("click", sortear);
+
+buildDrawers();
+renderGrid();
+</script>
+
+</body>
+</html>
